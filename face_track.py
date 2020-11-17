@@ -3,6 +3,7 @@ import numpy as np
 import picamera, picamera.array
 import time
 import haar_detect
+import dnn_detect as dn
 import talker 
 from adafruit_servokit import ServoKit
 import pid
@@ -21,16 +22,18 @@ class facetrack():
         self.F = 300 # aproximately
         
         # initialize PID controllers
-        self.pidc_x = pid.PID(0.01, 0.07, 0.0001)
-        self.pidc_y = pid.PID(0.05, 0.07, 0.0001)
+        self.pidc_x = pid.PID(0.01, 0.05, 0.0001)
+        self.pidc_y = pid.PID(0.01, 0.05, 0.0001)
         
         # and servo controller
         self.servo = ServoKit(channels=16)
         self.__center()
 
         # initialize detection
-        models = ['haarcascade_frontalface_default.xml']
-        self.detector = haar_detect.haar_detect(models)
+#         models = ['haarcascade_frontalface_default.xml']
+#         self.detector = haar_detect.haar_detect(models)
+        models = 'res10_300x300_ssd_iter_140000.caffemodel'
+        self.detector = dn.dnn_detect('deploy.prototxt.txt', models)
         
         #set up camera, pause for warmup
         self.camera = picamera.PiCamera()
@@ -64,7 +67,7 @@ class facetrack():
     def __center(self):
         global prev_x, prev_y
         self.servo.servo[0].angle=90
-        self.servo.servo[1].angle=178
+        self.servo.servo[1].angle=40
         self.pidc_x.initialize()
         self.pidc_y.initialize()
 
@@ -90,9 +93,9 @@ class facetrack():
         x = faceRects[0][0] + (width // 2)
         y = faceRects[0][1] + (height // 2)
         
-        if not self.__within(x, center_x, margin=.05):
+        if not self.__within(x, center_x, margin=.01):
             error = self.screenWidth // 2 - x 
-            xd = self.pidc_x.update(error, 0.2)
+            xd = self.pidc_x.update(error, 0.01)
             angle = np.rad2deg(np.arctan(distance / abs(xd)))
             if xd < 0:
                 angle_x = angle
@@ -101,16 +104,16 @@ class facetrack():
                 
             if self.__between(angle_x, 10, 170):
                 self.servo.servo[0].angle = angle_x
-                time.sleep(.2)
+                #time.sleep(.1)
                            
-        if not self.__within(y, center_y, margin=.05):
+        if not self.__within(y, center_y, margin=.01):
             error = self.screenHeight // 2 - y
-            yd = self.pidc_y.update(error, 0.2)
+            yd = self.pidc_y.update(error, 0.01)
             angle_y = 130 + np.rad2deg(np.arctan(distance / yd))
             
-            if self.__between(angle_y, 150, 180):
+            if self.__between(angle_y, 30, 60):
                 self.servo.servo[1].angle = angle_y
-                time.sleep(.2)
+                    #time.sleep(.1)
     
         return round(distance, 2)
     
