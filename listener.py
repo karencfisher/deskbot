@@ -5,7 +5,9 @@ import time
 class listener():
     
     def __init__(self):
+        
         self.recog = sr.Recognizer()
+        self.mic = sr.Microphone()
         self.recog.energy_threshold = 650
         self.recog.dynamic_energy_threshold = False
         
@@ -25,7 +27,7 @@ class listener():
         return text
      
     def listen(self):
-        with sr.Microphone(device_index=0) as source:
+        with self.mic as source:
             print('ready...')
             audio = self.recog.listen(source, phrase_time_limit=2)
             
