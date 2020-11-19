@@ -8,6 +8,9 @@ import talker
 from adafruit_servokit import ServoKit
 import pid
 
+# define pan function
+prev_x = 0
+prev_y = 0
 
 class facetrack():
     
@@ -16,11 +19,11 @@ class facetrack():
         # set constants
         self.screenWidth = 320
         self.screenHeight = 240
-        self.F = 300 # aproximately
+        self.F = 400 # aproximately
         
         # initialize PID controllers
-        self.pidc_x = pid.PID(0.01, 0.08, 0.0001)
-        self.pidc_y = pid.PID(0.05, 0.08, 0.0001)
+        self.pidc_x = pid.PID(0.01, 0.07, 0.0001)
+        self.pidc_y = pid.PID(0.05, 0.07, 0.0001)
         
         # and servo controller
         self.servo = ServoKit(channels=16)
@@ -70,7 +73,6 @@ class facetrack():
 
 
     def __pan_camera(self, faceRects):
-        global prev_x, prev_y
         # center of face in image
         
         #if no data (no face detection), exit function
@@ -91,25 +93,27 @@ class facetrack():
         x = faceRects[0][0] + (width // 2)
         y = faceRects[0][1] + (height // 2)
         
-        error = self.screenWidth // 2 - x 
-        xd = self.pidc_x.update(error, 0.1)
-        angle = np.rad2deg(np.arctan(distance / abs(xd)))
-        if xd < 0:
-            angle_x = angle
-        else:
-            angle_x = 180 - angle  
-            
-        if self.__between(angle_x, 10, 170):
-            self.servo.servo[0].angle = angle_x
+        if not self.__within(x, center_x, margin=.1):
+            error = self.screenWidth // 2 - x 
+            xd = self.pidc_x.update(error, 0.01)
+            angle = np.rad2deg(np.arctan(distance / abs(xd)))
+            if xd < 0:
+                angle_x = angle
+            else:
+                angle_x = 180 - angle  
+                
+            if self.__between(angle_x, 10, 170):
+                self.servo.servo[0].angle = angle_x
                 #time.sleep(.1)
                            
-        error = self.screenHeight // 2 - y
-        yd = self.pidc_y.update(error, 0.1)
-        angle_y = 130 + np.rad2deg(np.arctan(distance / yd))
-        
-        if self.__between(angle_y, 30, 60):
-            self.servo.servo[1].angle = angle_y
-                #time.sleep(.1)
+        if not self.__within(y, center_y, margin=.05):
+            error = self.screenHeight // 2 - y
+            yd = self.pidc_y.update(error, 0.01)
+            angle_y = 130 + np.rad2deg(np.arctan(distance / yd))
+            
+            if self.__between(angle_y, 30, 60):
+                self.servo.servo[1].angle = angle_y
+                    #time.sleep(.1)
     
         return round(distance, 2)
     

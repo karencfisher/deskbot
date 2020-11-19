@@ -19,7 +19,7 @@ class listener():
             print(text)
       
         except sr.UnknownValueError: 
-            text = "Sorry, I did not understand" 
+            pass 
               
         except sr.RequestError as e: 
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
