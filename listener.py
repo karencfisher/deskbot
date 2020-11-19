@@ -7,9 +7,9 @@ class listener():
     def __init__(self):
         
         self.recog = sr.Recognizer()
-        self.mic = sr.Microphone()
-        self.recog.energy_threshold = 650
-        self.recog.dynamic_energy_threshold = False
+        self.mic = sr.Microphone(device_index=0)
+        #self.recog.energy_threshold = 200
+        self.recog.dynamic_energy_threshold = True
         
     def __process_audio(self, audio):
         print('processing')

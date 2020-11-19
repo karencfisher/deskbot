@@ -19,11 +19,11 @@ class facetrack():
         # set constants
         self.screenWidth = 320
         self.screenHeight = 240
-        self.F = 300 # aproximately
+        self.F = 400 # aproximately
         
         # initialize PID controllers
-        self.pidc_x = pid.PID(0.02, 0.1, 0.0008)
-        self.pidc_y = pid.PID(0.02, 0.1, 0.0008)
+        self.pidc_x = pid.PID(0.01, 0.07, 0.0001)
+        self.pidc_y = pid.PID(0.05, 0.07, 0.0001)
         
         # and servo controller
         self.servo = ServoKit(channels=16)
@@ -41,7 +41,7 @@ class facetrack():
         time.sleep(1)
     
     
-    def __within(self, current, previous, margin=0.1):
+    def __within(self, current, previous, margin=.1):
         diff = abs(previous * margin)
             
         min = previous - diff
@@ -93,7 +93,7 @@ class facetrack():
         x = faceRects[0][0] + (width // 2)
         y = faceRects[0][1] + (height // 2)
         
-        if not self.__within(x, center_x, margin=.01):
+        if not self.__within(x, center_x, margin=.1):
             error = self.screenWidth // 2 - x 
             xd = self.pidc_x.update(error, 0.01)
             angle = np.rad2deg(np.arctan(distance / abs(xd)))
@@ -106,7 +106,7 @@ class facetrack():
                 self.servo.servo[0].angle = angle_x
                 #time.sleep(.1)
                            
-        if not self.__within(y, center_y, margin=.01):
+        if not self.__within(y, center_y, margin=.05):
             error = self.screenHeight // 2 - y
             yd = self.pidc_y.update(error, 0.01)
             angle_y = 130 + np.rad2deg(np.arctan(distance / yd))

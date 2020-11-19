@@ -58,6 +58,9 @@ def main():
         #display marked up image
         cv2.imshow('camera', image)
         key = cv2.waitKey(1)
+        if key > 0:
+            listening_process.terminate()
+            break
         
         #depending on if you are looking at her
         if distance == 0:
