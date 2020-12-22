@@ -1,13 +1,15 @@
+import os
 import cv2
 import numpy as np
 
 class haar_detect():
     
     def __init__(self, models):
-        path = '/home/pi/.local/lib/python3.5/site-packages/cv2/data/'
+        cwd = os.getcwd()
         self.cascades = []
         for model in models:
-            cascade = cv2.CascadeClassifier(path + model)
+            path = os.path.join(cwd, model)
+            cascade = cv2.CascadeClassifier(path)
             self.cascades.append(cascade)
         
     def detect(self, img):

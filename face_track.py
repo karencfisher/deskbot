@@ -19,8 +19,8 @@ class facetrack():
         self.F = 300 # aproximately
         
         # initialize PID controllers
-        self.pidc_x = pid.PID(0.01, 0.08, 0.0001)
-        self.pidc_y = pid.PID(0.05, 0.08, 0.0001)
+        self.pidc_x = pid.PID(0.03, 0.08, 0.01)
+        self.pidc_y = pid.PID(0.07, 0.08, 0.01)
         
         # and servo controller
         self.servo = ServoKit(channels=16)
