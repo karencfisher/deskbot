@@ -12,9 +12,12 @@ Currently, it performs:
 "Neurotic" in the sense that it just follows your movements and repeats anything you say. It also gets upset if it can't see you anymore 
 until you come back. :) It's just testing the face tracking and sppech recognition components.
 
-[]https://youtu.be/8LBQDt7BbPY
+[![Demonstration](https://img.youtube.com/vi/Y8LBQDt7BbPYE/0.jpg/)](https://www.youtube.com/watch?v=8LBQDt7BbPY "Demonstration")
 
 ## Configuration
 
-Raspberry PI 4 2b
-Rasbian OS
+Raspberry PI 4 2b 
+
+Rasbian OS 
+
+Python, OpenCV
