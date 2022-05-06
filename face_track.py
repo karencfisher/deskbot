@@ -10,9 +10,7 @@ import pid
 
 
 class facetrack():
-    
     def __init__(self):
-        
         # set constants
         self.screenWidth = 320
         self.screenHeight = 240
@@ -37,7 +35,6 @@ class facetrack():
         self.camera.resolution = (self.screenWidth, self.screenHeight)
         time.sleep(1)
     
-    
     def __within(self, current, previous, margin=.1):
         diff = abs(previous * margin)
             
@@ -51,7 +48,6 @@ class facetrack():
             
         return result
 
-
     def __between(self, value, min, max):
         if value <= min or value >= max:
             result = False
@@ -60,14 +56,12 @@ class facetrack():
             
         return result
 
-
     def __center(self):
         global prev_x, prev_y
         self.servo.servo[0].angle=90
         self.servo.servo[1].angle=40
         self.pidc_x.initialize()
         self.pidc_y.initialize()
-
 
     def __pan_camera(self, faceRects):
         global prev_x, prev_y
@@ -113,7 +107,6 @@ class facetrack():
     
         return round(distance, 2)
     
-    
     def update(self):    
         #capture image as CV image
         stream = picamera.array.PiRGBArray(self.camera)
@@ -131,7 +124,6 @@ class facetrack():
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 0, 255), 3)
         
         return d, face_rects, image
-    
     
     def cleanup(self):
         self.__center()

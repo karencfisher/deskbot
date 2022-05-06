@@ -3,9 +3,7 @@ import talker
 import time
     
 class listener():
-    
     def __init__(self):
-        
         self.recog = sr.Recognizer()
         self.mic = sr.Microphone(device_index=0)
         #self.recog.energy_threshold = 200
