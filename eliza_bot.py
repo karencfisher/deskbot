@@ -23,13 +23,15 @@ class ElizaBot(Bot):
                 listening_flag.value = False
             else:
                 self.talk.talk(response)
+        farewell = self.eliza.final()
+        self.talk.talk(farewell)
         print('Exiting process:', os.getpid())
 
     def watching(self, listening_flag):
         os.environ['DISPLAY'] = ':0'
         while listening_flag.value:
             #get visual and track
-            distance, _, image = self.watch.update()
+            _, _, image = self.watch.update()
             
             #display marked up image
             cv2.imshow('camera', image)
