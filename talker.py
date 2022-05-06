@@ -1,7 +1,6 @@
 import os
 
 class talker():
-    
     def __init__(self, pin=18, voice='en', gender='f', speed=115):
         self.pin = pin
         self.voice = voice
