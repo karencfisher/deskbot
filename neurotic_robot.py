@@ -49,6 +49,8 @@ def main():
     
     talk.talk("I am ready")
     print("Main process:", os.getpid())
+
+    os.environ['DISPLAY'] = ':0'
     
     while True:
         
