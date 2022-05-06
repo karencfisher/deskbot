@@ -32,12 +32,7 @@ class Bot:
             self.talk.talk(text)
         print('Exiting process:', os.getpid())
 
-    def run(self):
-        print("Main process:", os.getpid())
-        listening_flag = Value(c_bool, True)
-        listening_process = Process(target=self.listening, args=(listening_flag,))
-        listening_process.start()
-
+    def watching(self, listening_flag):
         os.environ['DISPLAY'] = ':0'
         while listening_flag.value:
             #get visual and track
@@ -58,6 +53,15 @@ class Bot:
                 if not self.spoke:
                     self.talk.talk("I see you.")
                     self.spoke = True
+
+    def run(self):
+        print("Main process:", os.getpid())
+        listening_flag = Value(c_bool, True)
+        listening_process = Process(target=self.listening, args=(listening_flag,))
+        listening_process.start()
+
+        # Run the watching loop (This process)
+        self.watching(listening_flag)
                 
         #cleanup
         #if speech recognition is running, flag it to stop and wait
